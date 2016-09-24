@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}All Comments{% endblock %}
+
+{% block content %}
+    <h1>Everybody's Comments</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.email }}</td>
+                <td>{{ comment.first_name }}</td>
+                <td>{{ comment.last_name }}</td>
+                <td>{{ comment.body }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

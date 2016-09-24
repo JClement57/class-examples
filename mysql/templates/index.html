@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Hello, MySQL{% endblock %}
+
+{% block content %}
+    <h2>Choose!</h2>
+    <ul>
+        <li><a href="{{ url_for('show_users') }}">Show Users</a></li>
+        <li><a href="{{ url_for('add_user') }}">Add User</a></li>
+    </ul>
+{% endblock %}

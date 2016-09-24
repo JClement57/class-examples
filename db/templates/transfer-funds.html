@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Transfer Funds{% endblock %}
+
+{% macro format_field(field) %}
+    <p>
+        {{ field.label }}
+        {{ field() }}
+        {% for error in field.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
+{% endmacro %}
+
+{% block content %}
+    <h1>Transfer Funds</h1>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ format_field(form.from_account) }}
+        {{ format_field(form.to_account) }}
+        {{ format_field(form.amount) }}
+        {{ format_field(form.cause_rollback) }}
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

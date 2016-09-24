@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+    {% if form.errors %}
+        <ul>
+            {% for field_name in form.errors %}
+                {% for field_error in form.errors[field_name] %}
+                    <li>{{ form[field_name].label }}: {{ field_error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.email.label }}{{ form.email() }}</p>
+        <p>{{ form.first_name.label }}{{ form.first_name() }}</p>
+        <p>{{ form.last_name.label }}{{ form.last_name() }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

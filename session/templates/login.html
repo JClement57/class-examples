@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+    <h1>Log In</h1>
+
+    {# Include the form error handling markup #}
+    {% include '_form_errors.html' %}
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.username.label }}{{ form.username() }}</p>
+        <p>{{ form.password.label }}{{ form.password() }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

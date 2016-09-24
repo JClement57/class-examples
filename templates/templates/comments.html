@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+</head>
+<body>
+    <h1>Comments</h1>
+    <p>Here are some comments</p>
+    <ul>
+    {% for comment in comments %}
+        <li><strong>{{ comment.who }}</strong>: {{ comment.what }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

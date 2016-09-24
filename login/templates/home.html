@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Hello, Login</h1>
+
+    {% if current_user.is_authenticated %}
+        <p>The current user is {{ current_user.email }}</p>
+    {% else %}
+        <p>
+            No one currently logged in.
+            <a href="{{ url_for('login') }}">Log in now</a>
+        </p>
+    {% endif %}
+{% endblock %}

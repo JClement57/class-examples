@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Log In{% endblock %}
+
+{% macro wtfield(field) %}
+    <p>
+        {{ field.label }} {{ field() }}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                {{ error }}
+            {% endfor %}
+
+        {% endif %}
+    </p>
+{% endmacro %}
+
+{% block content %}
+    <h1>Log In</h1>
+    <p>Log in below. Here's a little help:
+    <table>
+        <thead>
+        <tr>
+            <th>E-mail</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in hacker_news %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">Oops! No cheats configured!</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ wtfield(form.email) }}
+        {{ wtfield(form.password) }}
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

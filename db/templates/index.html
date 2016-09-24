@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Examples:DB</h1>
+
+    <h2>Users and Comments</h2>
+    <ul>
+        <li><a href="{{ url_for('all_users') }}">All users</a></li>
+        <li><a href="{{ url_for('all_comments') }}">All comments</a></li>
+        <li><a href="{{ url_for('update_profile') }}">Update Profile</a></li>
+    </ul>
+
+    <h2>Accounts</h2>
+    <ul>
+        <li><a href="{{ url_for('all_accounts') }}">All accounts</a></li>
+        <li><a href="{{ url_for('transfer') }}">Transfer funds</a></li>
+    </ul>
+{% endblock %}

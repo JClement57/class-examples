@@ -1,0 +1,5 @@
+= examples-login
+
+Simple example application showing how to use Flask-Login with a Flask application.
+
+Check the `examples-login.py` file for operational details.

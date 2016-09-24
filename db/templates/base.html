@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}Title{% endblock %}</title>
+</head>
+<body>
+<a href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='tuisd-logo.png') }}">
+</a>
+
+{# Display flash messages #}
+{% with messages = get_flashed_messages() %}
+    {%  if messages %}
+        <ul>
+            {% for message in get_flashed_messages() %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% block content %}
+{% endblock %}
+</body>
+</html>

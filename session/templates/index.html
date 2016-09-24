@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <h1>The Sessions Application</h1>
+
+    {# Display the content of the session object. It acts like a Python dictionary #}
+    <h2>Session Content</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody class="session">
+        {# Iterate over the keys in the session object #}
+        {% for key in session %}
+            <tr>
+                {# Show the key itself #}
+                <td>{{ key }}</td>
+                {# Show the value for the key in the session object #}
+                <td>{{ session[key] }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="2">Session empty</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if 'username' in session %}
+        <p>Logged in as {{ session.username }}; <a href="{{ url_for('logout') }}">log out</a></p>
+    {% else %}
+        <p>Not logged in; <a href="{{ url_for('login') }}">log in now</a></p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+= examples-mysql
+
+Simple Flask application that uses MySQL as its database.
+
+To run:
+
+. Execute the `create-db.sql` file against your schema.
+. Update the `db_connect` function in the `examples.py` file
+with the proper credentials for your database and schema.
+. Run the `examples-mysql.py` file.

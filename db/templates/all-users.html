@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}All Users{% endblock %}
+
+{% block content %}
+    <h1>All the Users</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>E-mail (Click for Comments)</th>
+            <th>First</th>
+            <th>Last</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('user_comments', email=user.email) }}">
+                        {{ user.email }}
+                    </a>
+                </td>
+                <td>{{ user['first_name'] }}</td>
+                <td>{{ user['last_name'] }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">No Users</td>
+            </tr>
+        {%  endfor %}
+        </tbody>
+    </table>
+{% endblock %}

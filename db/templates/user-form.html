@@ -4,6 +4,7 @@
 
 {% block content %}
     {% if form.errors %}
+        <h2>There were problems</h2>
         <ul>
             {% for field_name in form.errors %}
                 {% for field_error in form.errors[field_name] %}
@@ -13,11 +14,23 @@
         </ul>
     {% endif %}
 
+    {% if mode == 'create' %}
+        <h2>Create a new user</h2>
+    {% else %}
+        <h2>Update user {{ form.email.data }}</h2>
+    {% endif %}
+
     <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>{{ form.email.label }}{{ form.email() }}</p>
+        {{ form.csrf_token }}
+        {% if mode == 'create' %}
+            <p>{{ form.email.label }}{{ form.email() }}</p>
+        {% else %}
+            <input type="hidden" name="email" value="{{ form.email.data }}"/>
+        {% endif %}
         <p>{{ form.first_name.label }}{{ form.first_name() }}</p>
         <p>{{ form.last_name.label }}{{ form.last_name() }}</p>
+        <p>{{ form.password.label }}{{ form.password() }}</p>
+        <p>{{ form.confirm.label }}{{ form.confirm() }}</p>
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}

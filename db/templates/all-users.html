@@ -7,25 +7,26 @@
     <table>
         <thead>
         <tr>
-            <th>E-mail (Click for Comments)</th>
+            <th>E-mail</th>
             <th>First</th>
             <th>Last</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
-                <td>
-                    <a href="{{ url_for('user_comments', email=user.email) }}">
-                        {{ user.email }}
-                    </a>
-                </td>
+                <td>{{ user.email }}</td>
                 <td>{{ user['first_name'] }}</td>
                 <td>{{ user['last_name'] }}</td>
+                <td>
+                    <a href="{{ url_for('user_comments', email=user.email) }}">Comments</a>
+                    <a href="{{ url_for('update_user', email=user.email) }}">Update</a>
+                </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">No Users</td>
+                <td colspan="4">No Users</td>
             </tr>
         {%  endfor %}
         </tbody>

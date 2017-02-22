@@ -16,7 +16,7 @@
     <h1>Transfer Funds</h1>
 
     <form method="POST">
-        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
         {{ format_field(form.from_account) }}
         {{ format_field(form.to_account) }}
         {{ format_field(form.amount) }}

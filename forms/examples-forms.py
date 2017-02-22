@@ -1,17 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_wtf import Form
-from wtforms import TextField
+from flask_wtf import FlaskForm
+from wtforms import StringField
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'our very hard to guess secret'
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/thank-you')
 def thank_you():
     return render_template('thank-you.html')
+
 
 # Simple form handling using raw HTML forms
 @app.route('/sign-up', methods=['GET', 'POST'])
@@ -27,16 +31,19 @@ def sign_up():
             # Form data failed validation; try again
             error = "Please supply both first and last name"
         else:
+            # Do other business logic here!
             # Form data is valid; move along
             return redirect(url_for('thank_you'))
 
     # Render the sign-up page
     return render_template('sign-up.html', message=error)
 
+
 # More powerful approach using WTForms
-class RegistrationForm(Form):
-    first_name = TextField('First Name')
-    last_name = TextField('Last Name')
+class RegistrationForm(FlaskForm):
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -53,6 +60,7 @@ def register():
             return redirect(url_for('thank_you'))
 
     return render_template('register.html', form=form, message=error)
+
 
 # Run the application
 app.run(debug=True)

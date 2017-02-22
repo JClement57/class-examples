@@ -8,7 +8,6 @@ import os
 
 DATABASE = 'test-db.sqlite'
 
-
 # Connect to the database.
 def connect_db(db_path):
     if db_path is None:
@@ -36,12 +35,34 @@ def close_db_connection():
     if db is not None:
         db.close()
 
+
+# Convert the 'row' retrieved with 'cursor' to a dictionary
+# whose keys are column names and whose values are column values.
+def row_to_dictionary(cursor, row):
+    dictionary = {}
+    for idx, col in enumerate(cursor.description):
+        dictionary[col[0]] = row[idx]
+    return dictionary
+
+
 ##### Users and Comments ########################################
 
-# List all users in the database.
+# Create a new user.
+def create_user(email, first_name, last_name, password):
+    query = '''
+    INSERT INTO user (email, first_name, last_name, password)
+    VALUES (:email, :first, :last, :pass)
+    '''
+    cursor = g.db.execute(query, {'email': email, 'first': first_name, 'last': last_name, 'pass': password})
+    g.db.commit();
+    return cursor.rowcount
+
+
+# List all users.
 def all_users():
-    cursor = g.db.execute('select * from user')
+    cursor = g.db.execute('select * from user order by email')
     return cursor.fetchall()
+
 
 # List all comments in the database.
 def all_comments():
@@ -51,29 +72,24 @@ FROM user INNER JOIN comment ON user.email = comment.user
 ORDER BY last_name ASC, first_name ASC'''
     return g.db.execute(query).fetchall()
 
+
 # Look up a single user
 def find_user(email):
     return g.db.execute('SELECT * FROM user WHERE email = ?', (email,)).fetchone()
+
 
 # Retrieve comments for a user with the given e-mail address.
 def comments_by_user(email):
     cursor = g.db.execute('SELECT * FROM comment WHERE user = ?', (email,))
     return cursor.fetchall()
 
-# Update a user's profile (first and last name)
-def update_user(email, first_name, last_name):
-    query ='''
-UPDATE user SET first_name = :first, last_name = :last
-WHERE email = :email'''
-    cursor = g.db.execute(query, {'first': first_name, 'last': last_name, 'email': email})
-    g.db.commit()
-    return cursor.rowcount
 
-# Add a user profile
-def add_user(email, first_name, last_name, password):
-    insert_stmt = '''INSERT INTO user(email, first_name, last_name, password)
-VALUES(:email, :first, :last, :pass)'''
-    cursor = g.db.execute(insert_stmt, {'email': email, 'first': first_name, 'last': last_name, 'pass': password})
+# Update a user's profile (first and last name)
+def update_user(email, first_name, last_name, password):
+    query ='''
+UPDATE user SET first_name = :first, last_name = :last, password = :pass
+WHERE email = :email'''
+    cursor = g.db.execute(query, {'first': first_name, 'last': last_name, 'email': email, 'pass': password})
     g.db.commit()
     return cursor.rowcount
 

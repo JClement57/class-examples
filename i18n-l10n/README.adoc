@@ -1,0 +1,253 @@
+== Internationalization and Localization
+
+_Internationalization_ (abbreviated `I18N`) refers to
+making a program that can support different human languages.
+Of course, I18N includes text,
+but also includes formats for dates, numbers, currency, and so forth.
+
+_Localization_ (abbreviated `L10N`) refers to
+providing information to an internationalized program
+that allow it to use a new human language.
+
+A _locale_ refers to the a particular set of language
+and cultural conventions for a particular country.
+A locale has the form `ll_CC`,
+where `ll` is an
+link:https://en.wikipedia.org/wiki/ISO_639[ISO 639 two-letter language code],
+and `CC` is an
+link:https://en.wikipedia.org/wiki/ISO_3166[ISO 3166 two-letter country code].
+For example `en_US` refers to US English, and `en_GB` refers to British English.
+If the country code is not important,
+it can be dropped.
+For example `en` refers to English without reference to a particular country,
+`es` (for "Español") refers similarly to Spanish,
+and `de` (for "Deutsch") to German.
+
+We refer to the _source_ language,
+which is the human language in which text in a program
+is written originally.
+For our work, the _source_ langauge will always be English.
+In contrast, a _target_ language
+is the human language into which we wish to translate
+the text in a program (e.g., Spanish)
+
+== Set Up
+
+* Make sure the `Flask-Babel` package is installed.
+  There are several variants of this package;
+  be sure you get the "original" by name.
+
+== I18N
+
+The `Flask-Babel` package
+allows you to internationalize and localize
+both source files
+and Flask (Jinja) templates.
+
+=== Code
+
+To internationalize a program,
+we identify all the text
+that must be translated into a different locale.
+Consider the following function:
+[source,python]
+----
+def say_hello():
+   return "Hello, world"
+----
+
+Of course, we want to be able to translate
+`Hello, world` into other languages.
+To indicate this fact to Python,
+we wrap the string with the `gettext` function.
+[source,python]
+----
+def say_hello():
+   return gettext("Hello, world")
+----
+Think of `gettext` as marking the string
+as one that will be subject to translation.
+At run time, `gettext` uses the current _locale_
+to render a translated version of the string.
+Unless we configure our program otherwise,
+the `gettext` will simply return the original text.
+
+As you might imagine,
+if there are a lot of places in your program
+that need to be translated,
+it would quickly get tedious to keep typing `gettext`.
+Instead, the usual convention is to create a function
+that does the same thing and give it the name `_`.
+Although naming a function "underscore" seems strange,
+it's a completely legitimate Python function name,
+and has the advantage of being short and unassuming.
+With this definition available,
+we can rewrite our function function as:
+[source,python]
+----
+def say_hello():
+   return _("Hello, world")
+----
+Yes, it looks weird, but it works fine.
+
+=== Templates
+
+To internationalize templates,
+you use the same "underscore" syntax
+we just discussed.
+For example:
+[source,jinja]
+----
+{% block content %}
+    <h1>{{ _('Welcome to') }} Examples:I18N-L10N</h1>
+
+    <p>{{ _("Here are some messages") }}:</p>
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+----
+Note that the "underscore" functions
+_must_ appear within double mustaches
+in order to be interpreted by Python
+as a function call.
+If you omit the `{{ ... }}` syntax,
+the underscore function will _not_ be recognized
+and you'll see the function call show up in the rendered HTML.
+
+== Files
+
+To understand the next step (localization),
+you need to be aware of three types of files.
+
+. A _Portable Object_ file (`.po` extension)
+is an ordinary text file
+that associates text in the source language
+with translated text in the target language.
+There is one `.po` file for every language
+into which the program has been localized.
+. A _Portable Object Template_ file (`.pot` extension)
+is a `.po` file that is not specific to a translation.
+This file is usually created by extracting text strings
+from the program code and forms the basis for
+the `.po` files for each target language.
+. A _Machine Object_ file (`.mo` extension)
+is a binary file
+intended to be read by programs, not people.
+Using the `pybabel` utility program,
+we convert a `.po` file into the corresponding `.mo` file,
+which is used by the program at run time to render
+text in the target language.
+
+== L10N
+
+Once we've _internationalized_ our program,
+we're ready for _localization_.
+We'll use the `pybabel` command,
+which comes with `Flask-Babel`
+and is documented more thoroughly below.
+Here are the steps:
+
+. Run the `pybabel extract` command,
+which sifts through your code to find all the
+places where you've included a call to
+`gettext` (or `_`).
+The `pybabel` program will create a `.pot`
+file containing information on all the text strings
+that will have to be translated.
+. Run the `pybabel init` command to create
+a `.po` file for a target language.
+. Update the `.po` file with the proper translations
+of all the text in your program.
+This is the hard part.
+. Run the `pybabel compile` command,
+which converts your `.po` file(s)
+into the associated `.mo` file(s).
+The latter files are used by your program at run time
+to render text in the appropriate langauge.
+
+== PyBabel Command
+
+Here are the details of the `pybabel` command,
+used to manipulate `.po`, `.mo`, and `.pot` files.
+The command is run from the _command line_.
+
+Extract text from source code
+(according to `babel.cfg` configuration file)
+into the portable object template file called `messages.pot`.
+....
+pybabel extract -F babel.cfg -o messages.pot .
+....
+
+Based on the `messages.pot` file,
+create a portable object file for Spanish (`es`).
+This file is where the Spanish translation
+of the text in the program will be create.
+The file will be created in the `translations` directory.
+....
+pybabel init -i messages.pot -d translations -l es
+....
+
+Compile translations for use.
+This command finds all portable object (`.po`) files
+and generates machine object (`.mo`) files
+that are used by the program at run time.
+....
+pybabel compile -d translations
+....
+
+Update all existing `.po` files to reflect changes in the
+main `messages.pot` file.
+Note that you _do not_ want to run the `init` command (above),
+because it would overwrite all the translations
+already in the `.po` files!
+This command updates the `.po` files with _new_ text
+from the `.pot` file _without_ deleting existing entries.
+....
+pybabel update -i messages.pot -d translations
+....
+
+== Running a Localized Program
+
+There are various ways to configure your program
+to execute while using a given locale.
+One simple way uses the `app.config` dictionary
+to configure Babel.
+For example, to render text in Spanish:
+[source,python]
+----
+app.config['BABEL_DEFAULT_LOCALE'] = 'es'
+----
+
+When the program runs,
+all strings decorated with `gettext` (or "underscore")
+will be translated to the localized version
+from the appropriate `.mo` file
+(e.g., `es.mo` for Spanish).
+Note that localization uses the (binary) `.mo` file,
+and _not_ the (human-redable) `.po` file.
+If you are not seeing the proper translated text,
+you may have forgotten to run the `pybabel compile`
+command.
+
+== Links
+
+These links may help.
+
+=== Reference Material
+
+* link:pythonhosted.org/Flask-Babel/[Flask Babel]
+* link:babel.pocoo.org/[Babel]
+* link:docs.python.org/2.7/library/gettext.html[Python gettext Library],
+  which wraps the Gnu library
+* link:www.gnu.org/software/gettext/[Gnu gettext Library],
+  on which all this is based
+
+=== Tutorials
+
+* link:blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiv-i18n-and-l10n[Tutorial on Flask-Babel]
+* link:damyanon.net/flask-series-internationalization/[Flask I18N Tutorial]
+* link:phraseapp.com/blog/posts/python-localization-for-flask-applications/[L10N for Flask Applications]
+* link:www.safaribooksonline.com/blog/2013/11/27/flask-internationalization-and-localization/[Flask I18N and L10N]

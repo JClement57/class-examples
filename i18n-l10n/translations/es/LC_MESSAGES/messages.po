@@ -1,0 +1,31 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-03-27 18:51-0400\n"
+"PO-Revision-Date: 2017-03-27 16:46-0400\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: application.py:13
+msgid "Hello, World"
+msgstr "Hola Mundo"
+
+#: templates/index.html:6
+msgid "Welcome to"
+msgstr "Bienvenido a"
+
+#: templates/index.html:8
+msgid "Here are some messages"
+msgstr "Estos son algunos mensajes"

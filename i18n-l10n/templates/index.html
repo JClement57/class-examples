@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <h1>{{ _('Welcome to') }} Examples:I18N-L10N</h1>
+
+    <p>{{ _("Here are some messages") }}:</p>
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -238,16 +238,16 @@ These links may help.
 
 === Reference Material
 
-* link:pythonhosted.org/Flask-Babel/[Flask Babel]
-* link:babel.pocoo.org/[Babel]
-* link:docs.python.org/2.7/library/gettext.html[Python gettext Library],
+* link:https://pythonhosted.org/Flask-Babel/[Flask Babel]
+* link:http://babel.pocoo.org/en/latest/[Babel]
+* link:https://docs.python.org/2.7/library/gettext.html[Python gettext Library],
   which wraps the Gnu library
-* link:www.gnu.org/software/gettext/[Gnu gettext Library],
+* link:https://www.gnu.org/software/gettext/[Gnu gettext Library],
   on which all this is based
 
 === Tutorials
 
-* link:blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiv-i18n-and-l10n[Tutorial on Flask-Babel]
-* link:damyanon.net/flask-series-internationalization/[Flask I18N Tutorial]
-* link:phraseapp.com/blog/posts/python-localization-for-flask-applications/[L10N for Flask Applications]
-* link:www.safaribooksonline.com/blog/2013/11/27/flask-internationalization-and-localization/[Flask I18N and L10N]
+* link:https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiv-i18n-and-l10n[Tutorial on Flask-Babel]
+* link:http://damyanon.net/flask-series-internationalization/[Flask I18N Tutorial]
+* link:http://phraseapp.com/blog/posts/python-localization-for-flask-applications/[L10N for Flask Applications]
+* link:http://www.safaribooksonline.com/blog/2013/11/27/flask-internationalization-and-localization/[Flask I18N and L10N]

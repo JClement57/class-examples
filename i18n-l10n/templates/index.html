@@ -11,4 +11,6 @@
         <li>{{ message }}</li>
     {% endfor %}
     </ul>
+
+    <p>{{ ngettext('%(num)s message', '%(num)s messages', messages|length) }}</p>
 {% endblock %}

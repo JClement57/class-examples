@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-03-27 18:51-0400\n"
+"POT-Creation-Date: 2017-03-27 23:02-0400\n"
 "PO-Revision-Date: 2017-03-27 16:46-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,9 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: application.py:13
+#: application.py:14
+#, python-format
+msgid "Ours goes to %(limit)s"
+msgstr "El nuestro va a %(limit)s"
+
+#: application.py:16
+msgid "Inconceivable!"
+msgstr "¡Inconcebible!"
+
+#: application.py:17
+msgid "Hello! My name is Inigo Montoya"
+msgstr "¡Hola! Mi nombre es Inigo Montoya"
+
+#: application.py:18
+#, python-format
+msgid "Vizzini: %(viz)s; Inigo: %(im)s"
+msgstr "Vizzini: %(viz)s; Inigo: %(im)s"
+
+#: application.py:23
+#, python-format
+msgid "%(num)d blind mouse"
+msgid_plural "%(num)d blind mice"
+msgstr[0] "%(num)d ratón ciego"
+msgstr[1] "%(num)d ratones ciegos"
+
+#: application.py:25
 msgid "Hello, World"
 msgstr "Hola Mundo"
+
+#: application.py:29
+msgid "Fred lives in Peru"
+msgstr "Fred vive en Perú"
 
 #: templates/index.html:6
 msgid "Welcome to"
@@ -29,3 +58,11 @@ msgstr "Bienvenido a"
 #: templates/index.html:8
 msgid "Here are some messages"
 msgstr "Estos son algunos mensajes"
+
+#: templates/index.html:15
+#, python-format
+msgid "%(num)s message"
+msgid_plural "%(num)s messages"
+msgstr[0] "%(num)s mensaje"
+msgstr[1] "%(num)s mensajes"
+

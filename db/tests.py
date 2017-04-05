@@ -58,7 +58,7 @@ class ApplicationTestCase(FlaskTestCase):
     def test_user_page(self):
         """Verify the user page."""
         resp = self.client.get(url_for('all_users'))
-        self.assertTrue('Click for Comments' in resp.data)
+        self.assertTrue('Comments' in resp.data)
 
 
 class DatabaseTestCase(FlaskTestCase):
@@ -98,7 +98,7 @@ class DatabaseTestCase(FlaskTestCase):
 
     def test_add_user(self):
         """Make sure we can add a new user."""
-        row_count = db.add_user('test@example.com', 'FirstName', 'LastName', 'pass')
+        row_count = db.create_user('test@example.com', 'FirstName', 'LastName', 'pass')
         self.assertEqual(row_count, 1)
 
         test_user = db.find_user('test@example.com')
@@ -109,10 +109,10 @@ class DatabaseTestCase(FlaskTestCase):
 
     def test_update_user(self):
         """Add and then update a user."""
-        row_count = db.add_user('test@example.com', 'FirstName', 'LastName', 'pass')
+        row_count = db.create_user('test@example.com', 'FirstName', 'LastName', 'pass')
         self.assertEqual(row_count, 1)
 
-        row_count = db.update_user('test@example.com', 'NewFirstName', 'LastName')
+        row_count = db.update_user('test@example.com', 'NewFirstName', 'LastName', 'newpass')
         self.assertEqual(row_count, 1)
 
         test_user = db.find_user('test@example.com')

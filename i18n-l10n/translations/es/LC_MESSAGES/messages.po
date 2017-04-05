@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-03-27 23:02-0400\n"
+"POT-Creation-Date: 2017-03-28 13:34-0400\n"
 "PO-Revision-Date: 2017-03-27 16:46-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -47,9 +47,9 @@ msgstr[1] "%(num)d ratones ciegos"
 msgid "Hello, World"
 msgstr "Hola Mundo"
 
-#: application.py:29
-msgid "Fred lives in Peru"
-msgstr "Fred vive en Perú"
+#: application.py:26
+msgid "Josh has an attractive hat on today"
+msgstr "Josh tiene un sombrero atractivo hoy"
 
 #: templates/index.html:6
 msgid "Welcome to"
@@ -65,4 +65,7 @@ msgid "%(num)s message"
 msgid_plural "%(num)s messages"
 msgstr[0] "%(num)s mensaje"
 msgstr[1] "%(num)s mensajes"
+
+#~ msgid "Fred lives in Peru"
+#~ msgstr "Fred vive en Perú"
 

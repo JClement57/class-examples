@@ -8,7 +8,6 @@ app.config['SECRET_KEY'] = 'Super Secret Unguessable Key'
 app.config['BABEL_DEFAULT_LOCALE'] = 'es'
 
 
-
 @app.route('/')
 def index():
     # Can supply additional arguments to the string:
@@ -24,6 +23,7 @@ def index():
     blind_mice = ngettext('%(num)d blind mouse', '%(num)d blind mice', 3);
 
     return render_template('index.html', messages=[_('Hello, World'),
+                                                   _('Josh has an attractive hat on today'),
                                                    spinal_tap,
                                                    princess_bride,
                                                    blind_mice,

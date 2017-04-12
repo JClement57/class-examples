@@ -39,6 +39,14 @@ def sign_up():
     return render_template('sign-up.html', message=error)
 
 
+# Two buttons!
+@app.route('/two-buttons', methods=['GET', 'POST'])
+def two_buttons():
+    if request.method == 'POST':
+        print "Action is {}".format(request.form['action'])
+    return render_template('two-buttons.html')
+
+
 # More powerful approach using WTForms
 class RegistrationForm(FlaskForm):
     first_name = StringField('First Name')

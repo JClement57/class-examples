@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Two Buttons{% endblock %}
+
+{% block content %}
+    <h1>Press A Button</h1>
+
+    <form method="POST">
+        <input type="submit" value="Create" name="action"/>
+        <input type="submit" value="Select" name="action"/>
+    </form>
+{% endblock %}

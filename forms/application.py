@@ -1,6 +1,9 @@
+from datetime import date
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField
+from wtforms.fields.html5 import DateField, EmailField
 
 
 app = Flask(__name__)
@@ -53,6 +56,12 @@ class RegistrationForm(FlaskForm):
     last_name = StringField('Last Name')
 
 
+# More powerful approach using WTForms
+class RegistrationForm(FlaskForm):
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     error = ""
@@ -68,6 +77,18 @@ def register():
             return redirect(url_for('thank_you'))
 
     return render_template('register.html', form=form, message=error)
+
+
+# HTML5 Inputs
+class HTML5InputsForm(FlaskForm):
+    start_date = DateField('Start Date', default=date.today())
+    email_addr = EmailField('E-Mail Address')
+
+
+@app.route('/html5-inputs', methods=['GET', 'POST'])
+def html5_inputs():
+    html5_form = HTML5InputsForm()
+    return render_template('html5-inputs.html', form=html5_form)
 
 
 # Run the application

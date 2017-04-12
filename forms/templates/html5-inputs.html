@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}HTML5 Inputs{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        {{ form.csrf_token }}
+        <p>
+            {{ form.start_date.label }}{{ form.start_date() }}
+        </p>
+        <p>
+            {{ form.email_addr.label }}{{ form.email_addr() }}
+        </p>
+        <input type="submit" value="Go">
+    </form>
+{% endblock %}

@@ -6,8 +6,14 @@ app = Flask(__name__)
 # Default hello, world template
 @app.route('/')
 def hello_world():
-    print "Got into hello world view function."
+    print("Got into hello world view function.")
     return render_template('hello.html')
+
+
+@app.route('/home')
+def home_page():
+    """Display a workable home page."""
+    return render_template('home.html')
 
 
 # Pass single argument to template
@@ -25,13 +31,13 @@ def hello_name_from_url(who):
 # List in template
 @app.route('/comments')
 def comments():
-    fake_comments = [ { 'who': 'wesley',
-                        'what': 'As you wish!'},
-                      { 'who': 'vincini',
-                        'what': 'Inconceivable'},
-                      { 'who': 'old woman',
-                        'what': 'You had love in your heart'}
-                      ]
+    fake_comments = [{'who': 'Wesley',
+                      'what': 'As you wish!'},
+                     {'who': 'Vincini',
+                      'what': 'Inconceivable'},
+                     {'who': 'Old Woman',
+                      'what': 'You had love in your heart'}
+                     ]
     return render_template('comments.html', comments=fake_comments)
 
 

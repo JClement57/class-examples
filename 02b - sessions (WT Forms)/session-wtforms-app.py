@@ -1,5 +1,5 @@
 from flask import Flask, session, redirect, url_for, render_template, flash
-from flask.ext.wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Email, Length
 
@@ -12,7 +12,7 @@ def index():
     return render_template('index.html')
 
 # Request a user name and password. Doesn't fiddle with hiding the password, etc.
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('Email', validators=[Length(min=1, max=40)])
     password = StringField('Password', validators=[Length(min=1, max=40)])
     submit = SubmitField('Log In')
@@ -26,7 +26,7 @@ def login():
     if login_form.validate_on_submit():
         # If we get here, we've received a POST request and
         # our login form has been validated.
-        if login_form.password.data != 'pass':
+        if login_form.password.data != 'password':
             # Bogus password
             flash('Invalid password')
         else:

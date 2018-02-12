@@ -1,9 +1,0 @@
-table, th, td {
-    border-collapse: collapse;
-    padding: 10px;
-    border: 1px solid red;
-}
-
-tbody.session {
-    font-family: monospace;
-}

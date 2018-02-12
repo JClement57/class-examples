@@ -46,7 +46,7 @@ def sign_up():
 @app.route('/two-buttons', methods=['GET', 'POST'])
 def two_buttons():
     if request.method == 'POST':
-        print "Action is {}".format(request.form['action'])
+        print("Action is {}".format(request.form['action']))
     return render_template('two-buttons.html')
 
 

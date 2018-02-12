@@ -27,6 +27,10 @@ def hello_name():
 def hello_name_from_url(who):
     return render_template('hello-name.html', name=who)
 
+# Pass single argument to template from URL
+@app.route('/name/box')
+def amish_test():
+    return render_template('hello-name.html', name='Amish')
 
 # List in template
 @app.route('/comments')

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Welcome, {{ session.user.name }}</h2>
+    <p>Membership really doesn't have its privileges.</p>
+    <p>All you can do is <a href="/logout">log out</a>.</p>
+{% endblock %}

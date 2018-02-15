@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
 
     <title>Sessions Example</title>
 </head>
@@ -14,13 +17,9 @@
         <h2>SYS 394&mdash;Information Systems Design</h2>
     </div>
 
-    {% for message in get_flashed_messages() %}
-        <div class="alert alert-primary"><strong>Flash Message</strong>: {{ message }}</div>
-    {% endfor %}
-
     <div class="alert alert-secondary">
         {# Display the content of the session object. It acts like a Python dictionary #}
-        <p><strong>Session Content</strong></p>
+        <h2>Session Content</h2>
         <table class="table table-hover table-sm">
             <thead>
             <tr>
@@ -28,6 +27,7 @@
                 <th>Value</th>
             </tr>
             </thead>
+
             <tbody class="session">
             {# Iterate over the keys in the session object #}
             {% for key in session %}
@@ -38,15 +38,19 @@
                     <td>{{ session[key] }}</td>
                 </tr>
             {% else %}
-                <tr><td colspan="2">Session empty</td></tr>
+                <tr>
+                    <td colspan="2">Session empty</td>
+                </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-primary"><strong>Flash Message</strong>: {{ message }}</div>
+    {% endfor %}
+
     {% block content %}{% endblock %}
 </div>
 </body>
 </html>
-
-

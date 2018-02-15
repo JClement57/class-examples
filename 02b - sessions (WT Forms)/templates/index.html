@@ -5,9 +5,9 @@
 {% block content %}
     <h1>The Sessions Application</h1>
 
-    {% if 'username' in session %}
-        <p>Logged in as {{ session.username }}; <a href="{{ url_for('logout') }}">log out</a></p>
+    {% if 'email' in session %}
+        <p>Logged in as {{ session.email }}; <a href="{{ url_for('logout') }}">log out</a>.</p>
     {% else %}
-        <p>Not logged in; <a href="{{ url_for('login') }}">log in now</a></p>
+        <p>Not logged in; <a href="{{ url_for('login') }}">log in now</a>.</p>
     {% endif %}
 {% endblock %}

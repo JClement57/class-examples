@@ -1,7 +1,7 @@
 from flask import Flask, session, redirect, url_for, render_template, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, PasswordField
-from wtforms.validators import Email, Length
+from wtforms.validators import Email, Length, Regexp
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret key for session application'
@@ -16,7 +16,11 @@ def index():
 # Log in form with validation.
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
-    password = PasswordField('Password', validators=[Length(min=6, max=40)])
+    password = PasswordField('Password',
+                             validators=[Length(min=8),
+                                         Regexp(r'.*[A-Za-z]', message="Must have at least one letter"),
+                                         Regexp(r'.*[0-9]', message="Must have at least one digit"),
+                                         Regexp(r'.*[!@#$%^&*_+=]', message="Must have at least one special character")])
     remember = BooleanField('Remember me on this machine', default=False)
     submit = SubmitField('Log In')
 
@@ -30,7 +34,7 @@ def login():
     if login_form.validate_on_submit():
         # If we get here, we've received a POST request and
         # our login form has been validated.
-        if login_form.password.data != 'password':
+        if login_form.password.data != 'password!0!':
             # Bogus password
             flash('Invalid password')
         else:

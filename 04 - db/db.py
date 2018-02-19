@@ -2,7 +2,7 @@ from flask import g
 import psycopg2
 import psycopg2.extras
 
-##### Database Utilities ########################################
+# Database Utilities ########################################
 
 data_source_name = "dbname=isd user=tom host=localhost"
 
@@ -21,8 +21,8 @@ def close_db_connection():
     g.cursor.close()
     g.connection.close()
 
+# Users and Comments ########################################
 
-##### Users and Comments ########################################
 
 def create_member(email, first_name, last_name, password):
     """Create a new member."""
@@ -31,7 +31,7 @@ INSERT INTO member (email, first_name, last_name, password)
 VALUES (%(email)s, %(first)s, %(last)s, %(pass)s)
     '''
     g.cursor.execute(query, {'email': email, 'first': first_name, 'last': last_name, 'pass': password})
-    g.connection.commit();
+    g.connection.commit()
     return g.cursor.rowcount
 
 
@@ -74,11 +74,11 @@ WHERE email = %(email)s
     return g.cursor.rowcount
 
 
-##### Accounts ########################################
+# Accounts ########################################
 
 def all_accounts():
     """Return all data in the account table."""
-    g.cursor.execute('SELECT * FROM account')
+    g.cursor.execute('SELECT * FROM account ORDER BY name')
     return g.cursor.fetchall()
 
 

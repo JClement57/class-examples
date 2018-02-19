@@ -79,7 +79,7 @@ def create_member():
 
             if rowcount == 1:
                 flash("Member {} created".format(member_form.email.data))
-                return redirect(url_for('index'))
+                return redirect(url_for('all_members'))
             else:
                 flash("New member not created");
 
@@ -124,7 +124,7 @@ def update_member(email):
         if rowcount == 1:
             # Everything worked. Flash a success message and redirect to the home page.
             flash("Member '{}' updated".format(email))
-            return redirect(url_for('index'))
+            return redirect(url_for('all_members'))
 
         else:  # The update operation failed for some reason. Flash a message.
             flash('Member not updated')

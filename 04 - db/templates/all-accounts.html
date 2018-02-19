@@ -4,7 +4,7 @@
 
 {% block content %}
     <h1>Our Banking Empire</h1>
-    <table>
+    <table class="table table-striped table-hover table-sm">
         <thead>
         <tr>
             <th>ID</th>
@@ -28,6 +28,6 @@
     </table>
 
     <p>
-        <a href="{{ url_for('transfer') }}">Transfer Funds</a>
+        <a class="btn btn-primary" href="{{ url_for('transfer') }}">Transfer Funds</a>
     </p>
 {% endblock %}

@@ -2,26 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
     <title>{% block title %}Title{% endblock %}</title>
 </head>
 <body>
-<a href="{{ url_for('index') }}">
-    <img src="{{ url_for('static', filename='tuisd-logo.png') }}">
-</a>
+<div class="container">
+    <div class="jumbotron">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='tuisd-logo.png') }}">
+        </a>
+        <span class="display-2">Database Examples</span>
+    </div>
 
-{# Display flash messages #}
-{% with messages = get_flashed_messages() %}
-    {%  if messages %}
-        <ul>
-            {% for message in get_flashed_messages() %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-primary"><strong>Flash Message</strong>: {{ message }}</div>
+    {% endfor %}
 
-{% block content %}
-{% endblock %}
+    {% block content %}{% endblock %}
+</div>
 </body>
 </html>

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}All members{% endblock %}
+{% block title %}All Members{% endblock %}
 
 {% block content %}
-    <h1>All the members</h1>
-    <table>
+    <h1>All the Members</h1>
+    <table class="table table-striped table-hover table-sm">
         <thead>
         <tr>
             <th>E-mail</th>
@@ -20,15 +20,17 @@
                 <td>{{ member['first_name'] }}</td>
                 <td>{{ member['last_name'] }}</td>
                 <td>
-                    <a href="{{ url_for('member_comments', email=member.email) }}">Comments</a>
-                    <a href="{{ url_for('update_member', email=member.email) }}">Update</a>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       href="{{ url_for('member_comments', email=member.email) }}">Comments</a>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       href="{{ url_for('update_member', email=member.email) }}">Update</a>
                 </td>
             </tr>
         {% else %}
             <tr>
                 <td colspan="4">No members</td>
             </tr>
-        {%  endfor %}
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

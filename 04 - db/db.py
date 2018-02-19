@@ -1,125 +1,116 @@
-import sqlite3
 from flask import g
-from application import app
-
-import os
+import psycopg2
+import psycopg2.extras
 
 ##### Database Utilities ########################################
 
-DATABASE = 'test-db.sqlite'
-
-# Connect to the database.
-def connect_db(db_path):
-    if db_path is None:
-        db_path = os.path.join(os.getcwd(), DATABASE)
-    if not os.path.isfile(db_path):
-        raise RuntimeError("Can't find database file '{}'".format(db_path))
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
-    return connection
+data_source_name = "dbname=isd user=tom host=localhost"
 
 
-# Open a database connection and hang on to it in the global object.
-def open_db_connection(db_path=None):
+def open_db_connection():
     """Open a connection to the database.
 
     Open a connection to the SQLite database at `db_path`.
     Store the resulting connection in the `g.db` global object.
     """
-    g.db = connect_db(db_path)
+    g.connection = psycopg2.connect(data_source_name)
+    g.cursor = g.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 
-# If the database is open, close it.
 def close_db_connection():
-    db = getattr(g, 'db', None)
-    if db is not None:
-        db.close()
-
-
-# Convert the 'row' retrieved with 'cursor' to a dictionary
-# whose keys are column names and whose values are column values.
-def row_to_dictionary(cursor, row):
-    dictionary = {}
-    for idx, col in enumerate(cursor.description):
-        dictionary[col[0]] = row[idx]
-    return dictionary
+    g.cursor.close()
+    g.connection.close()
 
 
 ##### Users and Comments ########################################
 
-# Create a new user.
-def create_user(email, first_name, last_name, password):
+def create_member(email, first_name, last_name, password):
+    """Create a new member."""
     query = '''
-    INSERT INTO user (email, first_name, last_name, password)
-    VALUES (:email, :first, :last, :pass)
+INSERT INTO member (email, first_name, last_name, password)
+VALUES (%(email)s, %(first)s, %(last)s, %(pass)s)
     '''
-    cursor = g.db.execute(query, {'email': email, 'first': first_name, 'last': last_name, 'pass': password})
-    g.db.commit();
-    return cursor.rowcount
+    g.cursor.execute(query, {'email': email, 'first': first_name, 'last': last_name, 'pass': password})
+    g.connection.commit();
+    return g.cursor.rowcount
 
 
-# List all users.
-def all_users():
-    cursor = g.db.execute('select * from user order by email')
-    return cursor.fetchall()
+def all_members():
+    """List all members."""
+    g.cursor.execute('SELECT * FROM member ORDER BY email')
+    return g.cursor.fetchall()
 
 
-# List all comments in the database.
 def all_comments():
+    """List all comments."""
     query = '''
 SELECT first_name, last_name, email, body
-FROM user INNER JOIN comment ON user.email = comment.user
+FROM member INNER JOIN comment ON member.email = comment.member
 ORDER BY last_name ASC, first_name ASC'''
-    return g.db.execute(query).fetchall()
+    g.cursor.execute(query)
+    return g.cursor.fetchall()
 
 
-# Look up a single user
-def find_user(email):
-    return g.db.execute('SELECT * FROM user WHERE email = ?', (email,)).fetchone()
+def find_member(email):
+    """Look up a single member."""
+    g.cursor.execute('SELECT * FROM member WHERE email = %(email)s', {'email': email})
+    return g.cursor.fetchone()
 
 
-# Retrieve comments for a user with the given e-mail address.
-def comments_by_user(email):
-    cursor = g.db.execute('SELECT * FROM comment WHERE user = ?', (email,))
-    return cursor.fetchall()
+def comments_by_member(email):
+    """Retrieve comments for a member with the given e-mail address."""
+    g.cursor.execute('SELECT * FROM comment WHERE member = %(email)s', {'email': email})
+    return g.cursor.fetchall()
 
 
-# Update a user's profile (first and last name)
-def update_user(email, first_name, last_name, password):
-    query ='''
-UPDATE user SET first_name = :first, last_name = :last, password = :pass
-WHERE email = :email'''
-    cursor = g.db.execute(query, {'first': first_name, 'last': last_name, 'email': email, 'pass': password})
-    g.db.commit()
-    return cursor.rowcount
+def update_member(email, first_name, last_name, password):
+    """Update a member's profile."""
+    query = '''
+UPDATE member SET first_name = %(first)s, last_name = %(last)s, password = %(pass)s
+WHERE email = %(email)s
+    '''
+    g.cursor.execute(query, {'first': first_name, 'last': last_name, 'email': email, 'pass': password})
+    g.connection.commit()
+    return g.cursor.rowcount
+
 
 ##### Accounts ########################################
 
-# Return all data in the account table.
 def all_accounts():
-    return g.db.execute('SELECT * FROM account').fetchall()
+    """Return all data in the account table."""
+    g.cursor.execute('SELECT * FROM account')
+    return g.cursor.fetchall()
 
-# Return the balance for the account with id 'account_id'.
+
 def find_account(account_id):
-    return g.db.execute('SELECT * FROM account WHERE id=:id', {'id': account_id}).fetchone()
+    """Return the balance for the account with id 'account_id'."""
+    g.cursor.execute('SELECT * FROM account WHERE id=%(id)s', {'id': account_id})
+    return g.cursor.fetchone()
 
-# Get the balance for an account.
+
 def read_balance(account_id):
-    cursor = g.db.execute('SELECT balance FROM account WHERE id=:id', {'id': account_id})
-    row = cursor.fetchone()
+    """Get the balance for an account."""
+    g.cursor.execute('SELECT balance FROM account WHERE id=%(id)s', {'id': account_id})
+    row = g.cursor.fetchone()
     return row['balance']
 
-# Set the balance in account 'account_id' to 'new_balance'. Note that this
-# function does not commit to the database so that we can illustrate commit
-# and rollback behavior in the transfer_funds function.
+
 def update_balance(account_id, new_balance):
-    cursor = g.db.execute('UPDATE account SET balance = :balance WHERE id=:id',
-                          {'id': account_id, 'balance': new_balance})
-    if cursor.rowcount != 1:
+    """Set the balance in account 'account_id' to 'new_balance'.
+
+    Note that this function does not commit to the database
+    so that we can illustrate commit and rollback behavior
+    in the transfer_funds function.
+    """
+    g.cursor.execute('UPDATE account SET balance = %(balance)s WHERE id=%(id)s',
+                     {'id': account_id, 'balance': new_balance})
+    if g.cursor.rowcount != 1:
         raise RuntimeError("Failed to update account {}".format(account_id))
 
-# Transfer funds
+
 def transfer_funds(from_account_id, to_account_id, transfer_amount, cause_rollback):
+    """Transfer funds."""
+
     # Get the balance of the source account.
     from_balance = read_balance(from_account_id)
 
@@ -145,10 +136,10 @@ def transfer_funds(from_account_id, to_account_id, transfer_amount, cause_rollba
         message = "Rolled back transaction: from was {:.2f}, to was {:.2f}".format(pending_from_balance,
                                                                                    pending_to_balance)
         # Roll back the transaction and return the message
-        g.db.rollback()
+        g.connection.rollback()
         return message
     else:
-        # Commit the transaction. The user can see that the database updates are
+        # Commit the transaction. The member can see that the database updates are
         # persistent by viewing the current account balances.
-        g.db.commit()
+        g.connection.commit()
         return "Committed transaction"

@@ -8,14 +8,13 @@ import db
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Super Secret Unguessable Key'
 
-
 @app.before_request
-def before():
+def before_request():
     db.open_db_connection()
 
 
 @app.teardown_request
-def after(exception):
+def teardown_request(exception):
     db.close_db_connection()
 
 
@@ -24,9 +23,9 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/users')
-def all_users():
-    return render_template('all-users.html', users=db.all_users())
+@app.route('/members')
+def all_members():
+    return render_template('all-members.html', members=db.all_members())
 
 
 @app.route('/comments')
@@ -35,31 +34,31 @@ def all_comments():
 
 
 @app.route('/comments/<email>')
-def user_comments(email):
-    user = db.find_user(email)
-    if user is None:
-        flash('No user with email {}'.format(email))
+def member_comments(email):
+    member = db.find_member(email)
+    if member is None:
+        flash('No member with email {}'.format(email))
         comments = []
     else:
-        comments = db.comments_by_user(email)
-    return render_template('user-comments.html', user=user, comments=comments)
+        comments = db.comments_by_member(email)
+    return render_template('member-comments.html', member=member, comments=comments)
 
 
-# Create a form for manipulating user informat.
-class UserForm(FlaskForm):
+# Create a form for manipulating member informat.
+class MemberForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     first_name = StringField('First Name', validators=[Length(min=1, max=40)])
     last_name = StringField('Last Name', validators=[Length(min=1, max=40)])
     password = PasswordField('New Password', [InputRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Repeat Password')
-    submit = SubmitField('Save User')
+    submit = SubmitField('Save Member')
 
 
-# Create a user
-@app.route('/users/create', methods=['GET', 'POST'])
-def create_user():
-    # Create new user form. Will automatically populate from request.form.
-    user_form = UserForm()
+# Create a member
+@app.route('/members/create', methods=['GET', 'POST'])
+def create_member():
+    # Create new member form. Will automatically populate from request.form.
+    member_form = MemberForm()
 
     # The validate_on_submit() method checks for two conditions.
     # 1. If we're handling a GET request, it returns false,
@@ -67,70 +66,70 @@ def create_user():
     # 2. Otherwise, we're handling a POST request, so it runs the validators on the form,
     #    and returns false if any fail, so we also fall through to render_template()
     #    which renders the form and shows any error messages stored by the validators.
-    if user_form.validate_on_submit():
-        user = db.find_user(user_form.email.data)
+    if member_form.validate_on_submit():
+        member = db.find_member(member_form.email.data)
 
-        if user is not None:
-            flash("User {} already exists".format(user_form.email.data));
+        if member is not None:
+            flash("Member {} already exists".format(member_form.email.data));
         else:
-            rowcount = db.create_user(user_form.email.data,
-                                      user_form.first_name.data,
-                                      user_form.last_name.data,
-                                      user_form.password.data)
+            rowcount = db.create_member(member_form.email.data,
+                                        member_form.first_name.data,
+                                        member_form.last_name.data,
+                                        member_form.password.data)
 
             if rowcount == 1:
-                flash("User {} created".format(user_form.email.data))
+                flash("Member {} created".format(member_form.email.data))
                 return redirect(url_for('index'))
             else:
-                flash("New user not created");
+                flash("New member not created");
 
     # We will get here under any of the following conditions:
     # 1. We're handling a GET request, so we render the (empty) form.
     # 2. We're handling a POST request, and some validator failed, so we render the
-    #    form with the same values so that the user can try again. The template
+    #    form with the same values so that the member can try again. The template
     #    will extract and display the error messages stored on the form object
     #    by the validators that failed.
-    # 3. The email entered in the form corresponds to an existing user.
+    # 3. The email entered in the form corresponds to an existing member.
     #    The template will render an error message from the flash.
     # 4. Something happened when we tried to update the database (rowcount != 1).
     #    The template will render an error message from the flash.
-    return render_template('user-form.html', form=user_form, mode='create')
+    return render_template('member-form.html', form=member_form, mode='create')
 
 
-# Update user information.
-@app.route('/users/update/<email>', methods=['GET', 'POST'])
-def update_user(email):
-    # Retrieve user data.
-    row = db.find_user(email)
+# Update member information.
+@app.route('/members/update/<email>', methods=['GET', 'POST'])
+def update_member(email):
+    # Retrieve member data.
+    row = db.find_member(email)
 
     if row is None:
-        flash("User {} doesn't exist".format(email))
-        return redirect(url_for('all_users'));
+        flash("Member {} doesn't exist".format(email))
+        return redirect(url_for('all_members'));
 
     # Initialize object with form data if available (this is the default behavior for a FlaskForm;
     # you need not even provide the argument. Otherwise initialize with specific values fetched
     # previously from the database.
-    user_form = UserForm(email=row['email'],
-                         first_name=row['first_name'],
-                         last_name=row['last_name'])
+    member_form = MemberForm(email=row['email'],
+                             first_name=row['first_name'],
+                             last_name=row['last_name'])
 
-    if user_form.validate_on_submit():
+    if member_form.validate_on_submit():
         # If we get here, we're handling a POST request and the form validated successfully.
-        rowcount = db.update_user(email,
-                                  user_form.first_name.data,
-                                  user_form.last_name.data,
-                                  user_form.password.data)
+        rowcount = db.update_member(email,
+                                    member_form.first_name.data,
+                                    member_form.last_name.data,
+                                    member_form.password.data)
 
         # We're updating a single row, so we're successful if the row count is one.
         if rowcount == 1:
             # Everything worked. Flash a success message and redirect to the home page.
-            flash("User '{}' updated".format(email))
+            flash("Member '{}' updated".format(email))
             return redirect(url_for('index'))
 
         else:  # The update operation failed for some reason. Flash a message.
-            flash('User not updated')
+            flash('Member not updated')
 
-    return render_template('user-form.html', form=user_form, mode='update', )
+    return render_template('member-form.html', form=member_form, mode='update', )
 
 
 @app.route('/accounts')

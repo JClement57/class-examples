@@ -1,24 +1,24 @@
--- Insert data into user table
-INSERT INTO user (first_name, last_name, email, password)
+-- Insert data into member table
+INSERT INTO member (first_name, last_name, email, password)
 VALUES ('Fred', 'Ziffle', 'fred@ziffle.com', 'fred');
 
-INSERT INTO user (first_name, last_name, email, password)
+INSERT INTO member (first_name, last_name, email, password)
 VALUES ('Zelda', 'Ziffle', 'zelda@ziffle.com', 'zelda');
 
-INSERT INTO user (first_name, last_name, email, password)
+INSERT INTO member (first_name, last_name, email, password)
 VALUES ('Phil', 'Collins', 'phcollins@taylor.edu', 'phil');
 
 -- Insert data into comment table.
-INSERT INTO comment (id, body, user)
+INSERT INTO comment (id, body, member)
 VALUES (1, 'A sample comment.', 'fred@ziffle.com');
 
-INSERT INTO comment (id, body, user)
+INSERT INTO comment (id, body, member)
 VALUES (2, 'Another lively comment.', 'zelda@ziffle.com');
 
-INSERT INTO comment (id, body, user)
+INSERT INTO comment (id, body, member)
 VALUES (3, 'Phil''s profound comment.', 'phcollins@taylor.edu');
 
-INSERT INTO comment (id, body, user)
+INSERT INTO comment (id, body, member)
 VALUES (4, 'Bible Gateway is a helpful partner.', 'phcollins@taylor.edu');
 
 -- Insert data in to account table

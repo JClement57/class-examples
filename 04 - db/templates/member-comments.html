@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}User Comments{% endblock %}
+{% block title %}Member Comments{% endblock %}
 
 {% block content %}
-    {% if user %}
-        <h1>Comments from {{ user.first_name }} {{ user.last_name }}</h1>
+    {% if member %}
+        <h1>Comments from {{ member.first_name }} {{ member.last_name }}</h1>
 
         <ul>
         {% for comment in comments %}

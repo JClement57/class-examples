@@ -51,9 +51,9 @@ ORDER BY last_name ASC, first_name ASC'''
     return g.cursor.fetchall()
 
 
-def find_member(email):
+def find_member(memberEmail):
     """Look up a single member."""
-    g.cursor.execute('SELECT * FROM member WHERE email = %(email)s', {'email': email})
+    g.cursor.execute('SELECT * FROM member WHERE email = %(emailParam)s', {'emailParam': memberEmail})
     return g.cursor.fetchone()
 
 

@@ -129,7 +129,7 @@ def update_member(email):
         else:  # The update operation failed for some reason. Flash a message.
             flash('Member not updated')
 
-    return render_template('member-form.html', form=member_form, mode='update', )
+    return render_template('member-form.html', form=member_form, mode='update')
 
 
 @app.route('/accounts')

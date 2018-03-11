@@ -20,7 +20,7 @@
     </div>
 
     {% for message in get_flashed_messages() %}
-        <div class="alert alert-primary"><strong>Flash Message</strong>: {{ message }}</div>
+        <div class="alert alert-primary">{{ message }}</div>
     {% endfor %}
 
     {% block content %}{% endblock %}

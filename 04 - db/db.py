@@ -11,7 +11,7 @@ def open_db_connection():
     """Open a connection to the database.
 
     Open a connection to the SQLite database at `db_path`.
-    Store the resulting connection in the `g.db` global object.
+    Store the resulting connection in the `g.sql` global object.
     """
     g.connection = psycopg2.connect(data_source_name)
     g.cursor = g.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -20,6 +20,7 @@ def open_db_connection():
 def close_db_connection():
     g.cursor.close()
     g.connection.close()
+
 
 # Users and Comments ########################################
 

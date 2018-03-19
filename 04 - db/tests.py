@@ -8,7 +8,7 @@ import db
 from application import app
 
 
-@unittest.skip
+# @unittest.skip
 class TrivialTestCase(unittest.TestCase):
     # This method is invoked before EVERY test_xxx method.
     def setUp(self):
@@ -20,12 +20,12 @@ class TrivialTestCase(unittest.TestCase):
 
     def test_should_pass(self):
         print("In test_should_pass")
-        self.assertTrue(1 == 1)
+        self.assertTrue(1 == 1, "Expect this to succeed")
 
     @unittest.expectedFailure
     def test_should_fail(self):
         print("In test_should_fail")
-        self.assertTrue(1 == 2)
+        self.assertTrue(1 == 2, "Expect this to fail")
 
 
 class FlaskTestCase(unittest.TestCase):
@@ -53,73 +53,59 @@ class ApplicationTestCase(FlaskTestCase):
     def test_home_page(self):
         """Verify the home page."""
         resp = self.client.get('/')
-        self.assertTrue('Welcome' in resp.data, "Didn't find welcome message on home page")
+        self.assertTrue(b'Welcome' in resp.data, "Didn't find welcome message on home page")
 
-    def test_user_page(self):
-        """Verify the user page."""
-        resp = self.client.get(url_for('all_users'))
-        self.assertTrue('Comments' in resp.data)
+    def test_member_page(self):
+        """Verify the member page."""
+        resp = self.client.get(url_for('all_members'))
+        self.assertTrue(b'Comments' in resp.data)
 
 
 class DatabaseTestCase(FlaskTestCase):
     """Test database access and update functions."""
 
-    # This method is invoked once before all the tests in this test case.
-    @classmethod
-    def setUpClass(cls):
-        """So that we don't overwrite application data, create a temporary database file."""
-        (file_descriptor, cls.file_name) = tempfile.mkstemp()
-        os.close(file_descriptor)
-
-    # This method is invoked once after all the tests in this test case.
-    @classmethod
-    def tearDownClass(cls):
-        """Remove the temporary database file."""
-        os.unlink(cls.file_name)
-
     @staticmethod
-    def execute_script(resource_name):
+    def execute_sql(resource_name):
         """Helper function to run a SQL script on the test database."""
         with app.open_resource(resource_name, mode='r') as f:
-            g.db.cursor().executescript(f.read())
-        g.db.commit()
+            g.cursor.execute(f.read())
+        g.connection.commit()
 
     def setUp(self):
         """Open the database connection and create all the tables."""
         super(DatabaseTestCase, self).setUp()
-        db.open_db_connection(self.file_name)
-        self.execute_script('db/create-db.sql')
+        db.open_db_connection()
+        self.execute_sql('sql/create-sql.sql')
 
     def tearDown(self):
         """Clear all tables in the database and close the connection."""
-        self.execute_script('db/clear-db.sql')
         db.close_db_connection()
         super(DatabaseTestCase, self).tearDown()
 
-    def test_add_user(self):
-        """Make sure we can add a new user."""
-        row_count = db.create_user('test@example.com', 'FirstName', 'LastName', 'pass')
+    def test_add_member(self):
+        """Make sure we can add a new member."""
+        row_count = db.create_member('test@example.com', 'FirstName', 'LastName', 'pass')
         self.assertEqual(row_count, 1)
 
-        test_user = db.find_user('test@example.com')
-        self.assertIsNotNone(test_user)
+        test_member = db.find_member('test@example.com')
+        self.assertIsNotNone(test_member)
 
-        self.assertEqual(test_user['first_name'], 'FirstName')
-        self.assertEqual(test_user['last_name'], 'LastName')
+        self.assertEqual(test_member['first_name'], 'FirstName')
+        self.assertEqual(test_member['last_name'], 'LastName')
 
-    def test_update_user(self):
-        """Add and then update a user."""
-        row_count = db.create_user('test@example.com', 'FirstName', 'LastName', 'pass')
+    def test_update_member(self):
+        """Add and then update a member."""
+        row_count = db.create_member('test@example.com', 'FirstName', 'LastName', 'pass')
         self.assertEqual(row_count, 1)
 
-        row_count = db.update_user('test@example.com', 'NewFirstName', 'LastName', 'newpass')
+        row_count = db.update_member('test@example.com', 'NewFirstName', 'LastName', 'newpass')
         self.assertEqual(row_count, 1)
 
-        test_user = db.find_user('test@example.com')
-        self.assertIsNotNone(test_user)
+        test_member = db.find_member('test@example.com')
+        self.assertIsNotNone(test_member)
 
-        self.assertEqual(test_user['first_name'], 'NewFirstName')
-        self.assertEqual(test_user['last_name'], 'LastName')
+        self.assertEqual(test_member['first_name'], 'NewFirstName')
+        self.assertEqual(test_member['last_name'], 'LastName')
 
 
 # Do the right thing if this file is run standalone.

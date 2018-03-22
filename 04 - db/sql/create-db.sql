@@ -39,3 +39,7 @@ CREATE TABLE account
 );
 CREATE UNIQUE INDEX account_id_uindex
   ON account (id);
+
+-- Make sure sequence numbers are larger than any initial data.
+ALTER SEQUENCE account_id_seq RESTART WITH 100;
+ALTER SEQUENCE comment_id_seq RESTART WITH 100;

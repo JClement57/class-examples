@@ -20,12 +20,16 @@ class TrivialTestCase(unittest.TestCase):
 
     def test_should_pass(self):
         print("In test_should_pass")
-        self.assertTrue(1 == 1, "Expect this to succeed")
+        self.assertEqual(1, 1, "Expect this to succeed")
 
-    @unittest.expectedFailure
-    def test_should_fail(self):
-        print("In test_should_fail")
-        self.assertTrue(1 == 2, "Expect this to fail")
+    def test_should_also_pass(self):
+        print("In test_should_also_pass")
+        self.assertTrue(17 < 42, "Expect this to succeed also")
+
+    # @unittest.expectedFailure
+    # def test_should_fail(self):
+    #     print("In test_should_fail")
+    #     self.assertTrue(1 == 2, "Expect this to fail")
 
 
 class FlaskTestCase(unittest.TestCase):
@@ -75,7 +79,7 @@ class DatabaseTestCase(FlaskTestCase):
         """Open the database connection and create all the tables."""
         super(DatabaseTestCase, self).setUp()
         db.open_db_connection()
-        self.execute_sql('sql/create-sql.sql')
+        self.execute_sql('sql/create-db.sql')
 
     def tearDown(self):
         """Clear all tables in the database and close the connection."""

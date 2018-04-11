@@ -1,5 +1,9 @@
+import os
+from pathlib import PurePath
+
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, SubmitField, SelectField, FloatField, PasswordField, BooleanField, ValidationError
 from wtforms.validators import Email, Length, DataRequired, NumberRange, InputRequired, EqualTo
 
@@ -7,6 +11,8 @@ import db
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Super Secret Unguessable Key'
+
+
 
 @app.before_request
 def before_request():
@@ -33,6 +39,23 @@ def all_comments():
     return render_template('all-comments.html', comments=db.all_comments())
 
 
+@app.route('/details/<email>')
+def member_details(email):
+    member = db.find_member(email)
+
+    if member is None:
+        flash('No member with email {}'.format(email))
+        redirect(url_for('all_members'))
+
+    print(member)
+    if member['file_path'] is not None:
+        photo_path = url_for('static', filename=member['file_path'])
+    else:
+        photo_path = ''
+
+    return render_template('member-details.html', member=member, photo_path=photo_path)
+
+
 @app.route('/comments/<email>')
 def member_comments(email):
     member = db.find_member(email)
@@ -49,6 +72,7 @@ class MemberForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     first_name = StringField('First Name', validators=[Length(min=1, max=40)])
     last_name = StringField('Last Name', validators=[Length(min=1, max=40)])
+    photo = FileField('Photo', validators=[FileRequired()])
     password = PasswordField('New Password', [InputRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Repeat Password')
     submit = SubmitField('Save Member')
@@ -78,10 +102,38 @@ def create_member():
                                         member_form.password.data)
 
             if rowcount == 1:
+                # Grab the photo data and create an initial database record.
+                uploaded_photo = member_form.photo.data
+                photo_row = db.init_photo(member_form.email.data)
+                print("PHOTO ROW", photo_row)
+
+                # Come up with our own name for the file (more secure than user-supplied file)
+                file_name = "file{:04d}".format(photo_row['id'])
+                print("FILE NAME", file_name)
+
+                # Grab the file extension from the original file and add it to our name.
+                # N.B.: THIS EXPOSES US TO A MODERATE SECURITY RISK: Better to inspect the
+                # file content rather than rely on the user-supplied file name.
+                extension = PurePath(uploaded_photo.filename).suffix
+                file_name += extension
+                print("FILE+EXT", file_name)
+
+                # Create path to file that will be within the 'static' folder of the application
+                file_path = os.path.join('photos', file_name)
+                print("FILE PATH", file_path)
+
+                # Save the file to the 'static' folder; use absolute path based on app.static_folder.
+                save_path = os.path.join(app.static_folder, file_path)
+                uploaded_photo.save(save_path)
+                print("SAVE PATH", save_path)
+
+                # Update the database row now that we know the name and location of the file
+                db.set_photo(photo_row['id'], file_path)
+
                 flash("Member {} created".format(member_form.email.data))
                 return redirect(url_for('all_members'))
             else:
-                flash("New member not created");
+                flash("New member not created")
 
     # We will get here under any of the following conditions:
     # 1. We're handling a GET request, so we render the (empty) form.

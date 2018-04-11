@@ -36,6 +36,27 @@ VALUES (%(email)s, %(first)s, %(last)s, %(pass)s)
     return g.cursor.rowcount
 
 
+def init_photo(email):
+    """Create a photo record and return its ID"""
+    query_dictionary = {'email': email}
+    g.cursor.execute("INSERT INTO photo (member_email) VALUES (%(email)s)", query_dictionary)
+    g.connection.commit()
+
+    g.cursor.execute("SELECT * FROM photo WHERE member_email = (%(email)s)", query_dictionary)
+    return g.cursor.fetchone()
+
+
+def set_photo(photo_id, file_path):
+    """Update a photo record with the proper file name"""
+    query = """
+    UPDATE photo SET file_path = %(file_path)s
+    WHERE id = %(id)s
+    """
+    g.cursor.execute(query, {'file_path': file_path, 'id': photo_id})
+    g.connection.commit()
+    return g.cursor.rowcount
+
+
 def all_members():
     """List all members."""
     g.cursor.execute('SELECT * FROM member ORDER BY email')
@@ -54,7 +75,13 @@ ORDER BY last_name ASC, first_name ASC'''
 
 def find_member(memberEmail):
     """Look up a single member."""
-    g.cursor.execute('SELECT * FROM member WHERE email = %(emailParam)s', {'emailParam': memberEmail})
+    query = """
+    SELECT m.email, m.first_name, m.last_name, p.file_path
+    FROM member AS m
+       LEFT OUTER JOIN photo AS p ON m.email = p.member_email 
+    WHERE email = %(emailParam)s
+    """
+    g.cursor.execute(query, {'emailParam': memberEmail})
     return g.cursor.fetchone()
 
 

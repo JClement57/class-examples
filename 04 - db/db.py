@@ -57,6 +57,11 @@ def set_photo(photo_id, file_path):
     return g.cursor.rowcount
 
 
+def last_photo_seq():
+    g.cursor.execute('SELECT last_value FROM photo_id_seq')
+    return g.cursor.fetchone()[0]
+
+
 def all_members():
     """List all members."""
     g.cursor.execute('SELECT * FROM member ORDER BY email')

@@ -29,6 +29,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/foo')
+def foo():
+    print(db.last_photo_seq())
+    return "FOO"
+
 @app.route('/members')
 def all_members():
     return render_template('all-members.html', members=db.all_members())
